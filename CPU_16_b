@@ -1,0 +1,27 @@
+module CPU_16_b( input Clock);
+
+wire [2:0] OPCODE;
+wire RegDst, Jump, Branch, MemRead, MemWrite, RegWrite, MemToReg, ALUSrc;
+wire [1:0] ALUOp;
+
+Data_Path DP
+(
+Clock,
+RegDst, Branch, MemRead, MemWrite, RegWrite, MemToReg, ALUSrc,
+ALUOp,
+OPCODE
+);
+
+Control_Unit CU(
+OPCODE,
+RegDst, 
+Branch, 
+MemRead, 
+MemToReg,
+ALUOp,
+MemWrite, 
+ALUSrc,
+RegWrite
+);
+
+endmodule
