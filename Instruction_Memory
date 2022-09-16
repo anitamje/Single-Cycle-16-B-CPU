@@ -1,0 +1,13 @@
+module Instruction_Memory(
+
+input [15:0] PC, 
+output [15:0] Inst
+);
+
+reg[7:0] iMem[127:0];
+   
+initial $readmemb("InstMemory.mem", iMem);
+
+assign Inst={iMem[PC], iMem[PC+1]};
+
+endmodule
