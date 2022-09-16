@@ -1,0 +1,115 @@
+module Control_Unit(
+
+    input [2:0] OPCODE,
+    output reg RegDst,
+    output reg MemToReg,
+    output reg MemWrite,
+    output reg Branch,
+    output reg MemRead,   
+    output reg[1:0] AluOp,
+    output reg AluSrc,
+    output reg RegWrite
+    );
+    
+    always @ (OPCODE)
+begin
+case(OPCODE)
+3'b000: //PER R-FORMAT
+    begin
+   assign RegDst = 1'b1;
+   assign AluSrc = 1'b0;
+   assign MemToReg = 1'b0;
+   assign RegWrite = 1'b1;
+   assign MemRead = 1'b0;
+   assign MemWrite = 1'b0;
+   assign AluOp = 2'b10;
+   assign Branch = 1'b0;
+    end
+    
+3'b001: //PER ANDI
+    begin
+   assign RegDst = 0;
+   assign AluSrc = 1'b1;
+   assign MemToReg = 1'b0;
+   assign RegWrite = 1'b1;
+   assign MemRead = 1'b0;
+   assign MemWrite = 1'b0;
+   assign AluOp =2'b11;
+   assign Branch = 1'b0;
+    end
+    
+3'b010: //PER ORI
+    begin
+   assign RegDst = 0;
+   assign AluSrc = 1'b1;
+   assign MemToReg = 1'b0;
+   assign RegWrite = 1'b1;
+   assign MemRead = 1'b0;
+   assign MemWrite = 1'b0;
+   assign AluOp =2'b11;
+   assign Branch = 1'b0;
+    end
+    
+ 3'b001: //PER ADDI
+    begin
+   assign RegDst = 0;
+   assign AluSrc = 1'b1;
+   assign MemToReg = 1'b0;
+   assign RegWrite = 1'b1;
+   assign MemRead = 1'b0;
+   assign MemWrite = 1'b0;
+   assign AluOp =2'b11;
+   assign Branch = 1'b0;
+    end
+
+
+3'b001: //PER SLTI
+    begin
+   assign RegDst = 1'b0;
+   assign AluSrc = 1'b1;
+   assign MemToReg = 1'b0;
+   assign RegWrite = 1'b1;
+   assign MemRead = 1'b0;
+   assign MemWrite = 1'b0;
+   assign AluOp = 2'b11;
+   assign Branch = 1'b0;
+    end
+    
+3'b101: //PER LW
+    begin
+   assign RegDst = 0;
+   assign AluSrc = 1'b1;
+   assign MemToReg = 1'b1;
+   assign RegWrite = 1'b1;
+   assign MemRead = 1'b1;
+   assign MemWrite = 1'b0;
+   assign AluOp =2'b00;
+   assign Branch = 1'b0;
+    end
+    
+ 3'b110: //PER SW
+    begin
+   assign RegDst = 0;
+   assign AluSrc = 1'b1;
+   assign MemToReg = 1'b0;
+   assign RegWrite = 1'b0;
+   assign MemRead = 1'b0;
+   assign MemWrite = 1'b1;
+   assign AluOp =2'b00;
+   assign Branch = 1'b0;
+    end
+    
+3'b111: //PER ANDI
+    begin
+   assign RegDst = 0;
+   assign AluSrc = 1'b0;
+   assign MemToReg = 1'b0;
+   assign RegWrite = 1'b0;
+   assign MemRead = 1'b0;
+   assign MemWrite = 1'b0;
+   assign AluOp =2'b01;
+   assign Branch = 1'b1;
+    end 
+endcase
+
+end
