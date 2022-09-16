@@ -1,0 +1,66 @@
+module Data_Path(
+ input Clock,
+    input RegDst, 
+    input Branch,
+    input MemRead, 
+    input MemWrite, 
+    input RegWrite, 
+    input MemToReg, 
+    input ALUSrc, 
+    input [1:0] ALUOp, 
+    output [2:0] OPCODE
+    );
+
+reg[15:0] pc_initial; 
+wire [15:0] pc_next, pc2;
+wire [15:0] instruction; 
+wire [2:0] mux_regfile; 
+wire [15:0] readData1;
+wire [15:0] readData2;
+wire [15:0] writeData; 
+wire [15:0] mux_ALU;
+wire [15:0] ALU_Out; 
+wire [15:0] Zgjerimi;
+wire [15:0] memToMux; 
+wire [15:0] shifter2beq;
+wire [15:0] beqAddress; 
+wire [3:0] ALUCtrl; 
+wire zerof, overflow, carryout; 
+
+initial
+begin
+    pc_initial = 16'd10; 
+end
+
+always@(posedge Clock)
+begin
+    pc_initial <= pc_next; 
+    
+end
+
+assign pc2 = pc_initial + 2; 
+
+Instruction_Memory IM(pc_initial, instruction); 
+
+assign mux_regfile = (RegDst == 1'b1) ? instruction[6:4] : instruction[9:7]; 
+
+assign Zgjerimi = {{9{instruction[6]}}, instruction[6:0]};  
+
+
+Register_File RF(instruction[12:10], instruction[9:7], mux_regfile, writeData, RegWrite, Clock, ReadRS, ReadRT ); 
+
+assign mux_ALU = (ALUSrc == 1'b1) ? Zgjerimi : readData2; 
+
+ALU_Control AC(ALUOp, instruction[3:0], instruction[15:13], ALUCtrl); 
+
+ALU_16b ALU(readData1, mux_ALU, ALUCtrl[2], ALUCtrl[1:0], zerof, ALU_Out, overflow, carryout);
+
+Data_Memory DM(ALU_Out, 0, MemWrite, MemRead, Clock, memToMux);
+
+assign writeData = (MemToReg == 1'b1) ? memToMux : ALU_Out;
+
+assign beqAddress = pc2 + shifter2beq; 
+
+assign OPCODE = instruction[15:13];
+
+endmodule
